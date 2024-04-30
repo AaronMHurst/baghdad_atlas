@@ -1,9 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Aaron Hurst, March 1, 2017.                                                 %
-%Department of Nuclear Engineering, University of California, Berkeley       %
-%<amhurst@berkeley.edu>                                                      %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 # The Baghdad Atlas
 
 This project is based on the original (*n,n'*&gamma;) measurements carried out
