@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas of Gamma-Ray Spectra from the Inelastic Scattering of Reactor Fast Neutrons: Introduction</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <ul id="menu">
+      <li style="display:inline;padding:5px">
+	<a href="motive.html"> Motivation
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="intro.html">
+	  <div class="dropdown">
+	    <span> Introduction </span>
+	    <div class="dropdown-content">
+	      <a href="intro.html#general">General info</a>
+	      <a href="intro.html#start">Getting started</a>
+	      <a href="intro.html#pyinst">Python installation</a>
+	      <a href="intro.html#runjup">Running Jupyter</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="install.html">
+	  <div class="dropdown">
+	    <span> Installation </span>
+	    <div class="dropdown-content">
+	      <a href="install.html#tree">Organization</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="schema.html">Schema
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="usage.html">
+	  <div class="dropdown">
+	    <span> Data access </span>
+	    <div class="dropdown-content">
+	      <a href="usage.html#commandline">Terminal</a>
+	      <a href="usage.html#notebook">Notebook</a>
+	      <a href="usage.html#browser">GUI</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="cscalc.html">Cross sections
+      </a></li>
+    </ul>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <a href="motive.html"> [PREVIOUS] </a>
+    <a href="index.html"> [HOME] </a>
+    <a href="install.html"> [NEXT] </a>
+    <hr>
+
+    <h1> Introduction </h1>
+    <h2>
+      <a name="general"> General information </a>
+    </h2>
+
+    <p>A relational database has been developed based on the original (<i>n,n&apos;&gamma;</i>) work carried out by A.M. Demidov <i>et al</i>., at the Nuclear Research Institute in Baghdad, Iraq [<a href="motive.html#ftn.id:ATLAS">1</a>].  For reference, the complete ATLAS is provided as a <typewriter>pdf</typewriter> accompanying this software.  A summary article <em_red>[A.M. Hurst, L.A. Bernstein, and K. Song, arXiv:2001.11140v2 [physics.app-ph]]</em_red> providing an overview of the project may be downloaded from <a href="https://arxiv.org/abs/2001.11140">here</a>.</p>
+
+    <p>The information from the ATLAS includes:
+      <ul>
+	<li> <i>&gamma;</i>-ray energies and intensities.</li>
+	<li> Nuclide and level information from which the <i>&gamma;</i>-ray originated.</li>
+	<li> Target (sample) experimental measurement information.</li>
+    </ul></p>
+    
+    <p>All of this is described in greater detail in the <a href="schema.html">schema</a>.</p>
+
+    <p>Taken together, this information allows for the extraction of the flux-weighted (<i>n,n&apos;&gamma;</i>) cross sections for a given transition relative to a defined value.  In the examples presented here, we are currently using the fast-neutron flux-weighted partial cross section for the production of the 847-keV 2<sup>+</sup><sub>1</sub> &rightarrow; 0<sup>+</sup><sub>gs</sub> transition in <sup>56</sup>Fe, <i>&sigma;<sub>&gamma;</sub></i>=143 mb.  This value can be changed to accommodate the user preference - see <a href="cscalc.html">here</a> for how to do this.</p>
+
+    <p>The (<i>n,n&apos;&gamma;</i>) data has been compiled into a series of ASCII <i>comma separated value</i> tables (the delimiter is a <typewriter>&lt;TAB&gt;</typewriter> in this case) in the <typewriter>CSV_DATA</typewriter> directory.  The corresponding SQLite database is then created by executing the <typewriter>make && make run</typewriter> command and installed into the <typewriter>notebook_analysis</typewriter> and <typewriter>sql_codes</typewriter> directories after invoking the <typewriter>make install</typewriter> command.  The installation procedure is described in detail <a href="install.html">elsewhere</a>.
+
+    <p>The database can then be interacted with <a href="usage.html#commandline">directly</a> via the SQLite engine.  We have provided a suite of Structured Query Language (SQL) scripts in the <typewriter>sql_codes</typewriter> directory illustrating various methods for querying the data.  The database can also be <a href="usage.html#notebook">accessed</a> via the Jupyter Notebook Python-browser interface.  All of this is shown schematically below.</p>
+
+    <div id="images">
+      <img class="flowfig" border="0" src="atlas_flowchart_transparent.png" alt="Flowchart" title="Database interaction flow chart" style="height:300px;width:550px"/>
+    </div>
+
+    <h2>
+      <a name="start"> Getting started </a>
+    </h2>
+
+    <p> The software provided with this package is intended to create a SQLite database on Linux and Mac OS X platforms.  For Windows users, <a href="http://www.mingw.org/Welcome_to_MinGW_org">MinGW</a> and <a href="http://www.cygwin.com/">Cygwin</a> may provide a suitable alternative application environment/emulator (not tested).  However, Windows-based environments have not been considered in the current project.
+    </p>
+
+    <h3>
+      System requirements:
+    </h3>
+    <p>
+      <ul>
+	<li> The <a href="https://www.sqlite.org/">SQLite3</a> database engine </li>
+	<li> The <a href="https://gcc.gnu.org/">GNU C compiler</a> <typewriter>gcc</typewriter></li>
+	<li> To use the <a href="http://jupyter.readthedocs.io/en/latest/install.html">Jupyter Notebook</a> to interact with the data, the programming language <a href="https://www.python.org/downloads/">Python 2.7</a> or <a href="https://www.python.org/downloads/">Python 3</a> is required.</li>
+	<li> In addition, several Python libraries are also required: <typewriter>numpy</typewriter>; <typewriter>scipy</typewriter>; <typewriter>matplotlib</typewriter>; <typewriter>pandas</typewriter>; <typewriter>ipython</typewriter>; <typewriter>jupyter</typewriter>; <typewriter>sqlite3</typewriter>; and, <typewriter>seaborn</typewriter>.  For installation of Python and the basic package requirements see below.</li>
+      </ul>
+    </p>
+
+    <h3>
+      Recommended:
+    </h3>
+    <p>
+      <ul>
+	<li> <a href="https://www.continuum.io/downloads">Anaconda</a>: An easy-to-use Python distribution and package manager.  Once installed it allows for creation of several Python environments to seamlessly coexist.  A big advantage being if you already have Python 2, you can easily create a Python 3 environment that won't interfere with anything else in your path; no system changes or even manual changes to your <typewriter>.bashrc</typewriter> or <typewriter>.cshrc</typewriter> login scripts are required.  New Python libraries are then easy to search and install using <typewriter>conda</typewriter> methods, e.g., to search for and install the Python library <a href="https://seaborn.pydata.org/">Seaborn</a>:
+	    <pre>
+	      conda search seaborn
+	      conda install seaborn</pre>
+	    Also, Anaconda conveniently installs the <a href="http://jupyter.readthedocs.io/en/latest/install.html">Jupyter Notebook</a>!  To see a list of Python packages in your current environment simply type:
+	    <pre>
+	      conda list</pre></li>
+	<li> <a href="https://www.macports.org/">MacPorts</a> (for Mac OS X): Enables easy compilation and installation of software packages, e.g., to install SQLite3:
+	  <pre>
+	    sudo port install sqlite3</pre>
+	  This is analogous to the <typewriter>apt-get install</typewriter> (Ubuntu/Debian) and <typewriter>yum install</typewriter> (Fedora) commands in Linux.  A recipe for installing MacPorts and the most basic Python packages may also be found <a href="https://astrofrog.github.io/macports-python/">here</a>.
+
+</li>
+	<li> <a href="https://pip.pypa.io/en/stable/">pip</a>: Another package manager enabling easy installation and management of software packages written in Python.  To install pip:
+	  <pre>
+	    sudo easy_install pip</pre>
+	  Then to install a package:
+	  <pre>
+	    pip install seaborn</pre></li>
+      </ul>
+    </p>
+
+    <h2>
+      <a name="pyinst"> Python installation </a>
+    </h2>
+    <div style="margin-bottom:0.5cm"> </div>
+    <p>
+      This section is only intended for those who may need to install Python from the source or are missing some of the basic libraries required to use the Jupyter Notebook supplied with this package.  The following procedures should only be considered as a set of <b><i>guidelines</i></b> rather than a strict set of rules and deviations may be necessary.  But hopefully it provides a useful starting point, if needed.</p>
+
+    <h3> Linux </h3>
+    <ul>
+      <li> To install Python, first download the latest version from <a href="http://www.python.org"> <typewriter style="color:navy">http://www.python.org</typewriter></a> and compile from the source.  For example, <typewriter>Python-2.7.13</typewriter>:
+	<pre>
+	  tar -xvzf Python-2.7.13.tgz
+	  ./configure
+	  make
+	  make install</pre></li>
+      <li> Define the <typewriter style="color:gold">PYTHONPATH</typewriter> and <typewriter style="color:gold">LD_LIBRARY_PATH</typewriter> variables in your login script.</li>
+      <li> For the <typewriter>bash</typewriter> family, i.e. in your <typewriter>.bashrc</typewriter> script define:
+	<pre>
+	  export <em_gold>PYTHONPATH</em_gold><em_black>=$</em_black><em_gold>HOME</em_gold><em_black>/python</em_black>
+	  export <em_gold>LD_LIBRARY_PATH</em_gold><em_black>=/usr/local/lib:$</em_black><em_gold>LD_LIBRARY_PATH</em_gold></pre></li>
+      <li> Alternatively, for the <typewriter>csh</typewriter> family, in your <typewriter>.cshrc</typewriter> script define:
+	<pre>
+	  setenv <em_gold>PYTHONPATH</em_gold><em_black>=$</em_black><em_gold>HOME</em_gold><em_black>/python</em_black>
+	  setenv <em_gold>LD_LIBRARY_PATH</em_gold><em_black>=/usr/local/lib:$</em_black><em_gold>LD_LIBRARY_PATH</em_gold></pre></li>
+      <li> Additional packages, mainly from the SciPy stack, also need to be installed.  For Ubuntu/Debian flavors:
+	<pre>
+	  sudo apt-get update <em_red>#If it's been a while!</em_red>
+	  sudo apt-get upgrade <em_red>#sudo apt-get dist-upgrade</em_red>
+	  sudo apt-get install python-numpy python-scipy python-matplotlib python-pandas ipython python-seaborn</pre></li>
+      <li> Finally, to install the Jupyter Notebook:
+	<pre>
+	  pip install jupyter <em_red>#Python 2</em_red>
+	  pip3 install jupyter <em_red>#Python 3</em_red></pre></li>
+      <li> To install <typewriter>pip</typewriter>, see above.</li>
+    </ul>
+
+    <div style="margin-bottom:0.5cm"> </div>
+    <h3> Mac OS X </h3>
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <ul> 
+      <li> First make sure a recent version of <a href="https://developer.apple.com/xcode/">Xcode</a> is installed with command line tools and X11.</li>
+      <li> Install <a href="https://www.macports.org/">MacPorts</a> according to OS version then run the following commands from the terminal:
+      <pre>
+	sudo xcode-select --install
+	sudo xcode-build -license
+	sudo port -v selfupdate</pre></li>
+      <li> Check definition of <typewriter style="color:gold">PATH</typewriter> variable in <typewriter>.bashrc_profile</typewriter> or <typewriter>.profile</typewriter> in <typewriter style="color:black">$</typewriter><typewriter style="color:gold">HOME</typewriter> directory is set accordingly:
+	<pre>
+	  export <em_gold>PATH</em_gold><em_black>=/opt/local/bin:/opt/local/sbin:$</em_black><em_gold>PATH</em_gold></pre></li>
+      <li> Install ports related to installed python version, e.g., for Python-2.7:
+	<pre>
+	  sudo port install python27
+	  sudo port install py27-numpy py27-scipy py27-matplotlib py27-pandas py27-ipython py27-seaborn</pre></li>
+      <li> Set <typewriter>python27</typewriter> and <typewriter>ipython27</typewriter> to the default versions:
+	<pre>
+	  sudo port select --set python python27
+	  sudo port select --set ipython py27-ipython</pre></li>
+
+      <li> Install the Jupyter Notebook:
+	<pre>
+	  sudo port install py27-jupyter</pre></li>
+    </ul>
+
+    <h2>
+      <a name="runjup"> Running Jupyter </a>
+    </h2>
+    <!--<div style="margin-bottom:0.5cm"> </div>-->
+    <p>
+      To start the notebook server, execute one of the following commands from the terminal:
+      <pre>
+	jupyter notebook <em_red># or...</em_red>
+	ipython notebook</pre></p>
+    <p>The terminal will then display some information about the notebook server including the URL of the web application (default: <typewriter>http://localhost:8888/tree</typewriter>).  All being well, the notebook should then open in your browser.  To execute a cell in a Jupyter Notebook press <typewriter>&lt;SHIFT&gt;</typewriter> + <typewriter>&lt;ENTER&gt;</typewriter> or <typewriter>&lt;CTRL&gt;</typewriter> + <typewriter>&lt;ENTER&gt;</typewriter>.  More information on this utility and the notebook provided with this package may be found <a href="usage.html#notebook">here</a>.</p>
+
+    <div id="images">
+      <a href="http://nssc.berkeley.edu/">
+	<img class="nssc" src="NSSCLOGO8transparent.png" alt="NSSC" title="NSSC logo"/>
+      </a>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas of Gamma-Ray Spectra from the Inelastic Scattering of Reactor Fast Neutrons: Usage</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <ul id="menu">
+      <li style="display:inline;padding:5px">
+	<a href="motive.html"> Motivation
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="intro.html">
+	  <div class="dropdown">
+	    <span> Introduction </span>
+	    <div class="dropdown-content">
+	      <a href="intro.html#general">General info</a>
+	      <a href="intro.html#start">Getting started</a>
+	      <a href="intro.html#pyinst">Python installation</a>
+	      <a href="intro.html#runjup">Running Jupyter</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="install.html">
+	  <div class="dropdown">
+	    <span> Installation </span>
+	    <div class="dropdown-content">
+	      <a href="install.html#tree">Organization</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="schema.html">Schema
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="usage.html">
+	  <div class="dropdown">
+	    <span> Data access </span>
+	    <div class="dropdown-content">
+	      <a href="usage.html#commandline">Terminal</a>
+	      <a href="usage.html#notebook">Notebook</a>
+	      <a href="usage.html#browser">GUI</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="cscalc.html">Cross sections
+      </a></li>
+    </ul>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <a href="schema.html"> [PREVIOUS] </a>
+    <a href="index.html"> [HOME] </a>
+    <a href="cscalc.html"> [NEXT] </a>
+    <hr>
+
+    <h1> Methods for querying the data </h1>
+
+    <p>
+      Database-query operations are performed by invoking statements based on the SQLite syntax.  There are several for options for retrieving data utilizing conditional arguments in this way.</p>
+
+    <h2>
+      <a name="commandline"> Using the terminal command line </a>
+    </h2>
+    
+    <p>
+      The <typewriter>sqlite3</typewriter> engine provides a terminal-based front-end to the SQLite library able to evaluate queries interactively and display the corresponding results.  In the following example, we query the <typewriter>atlas_baghdad_py3.db</typewriter> database via the sqlite "interpreter" to retrieve <typewriter>symbol</typewriter>, <typewriter>sample_composition</typewriter>, <typewriter>mass</typewriter>, and <typewriter>exposure_time</typewriter> for all entries in the <a href="schema.html#sql_schema"><typewriter>sample</typewriter> table</a> having an atomic number within the range 30&le;<typewriter>Z</typewriter>&le;40:
+
+      <pre>
+        user@machine:sql_codes$ sqlite3 atlas_baghdad_py3.db
+        SQLite version 3.29.0 2019-07-10 17:32:03
+        Enter ".help" for usage hints.
+        sqlite> .header on
+        sqlite> .mode column
+        sqlite> SELECT symbol AS "chemical symbol", Z AS "atomic number",
+        ...> sample_composition AS "sample composition", mass AS "mass [g]", 
+        ...> exposure_time AS "exposure time [h]" 
+        ...> FROM sample
+        ...> WHERE Z >= 30 AND Z <=40;
+        chemical symbol  atomic number  sample composition  mass [g]    exposure time [h]
+        ---------------  -------------  ------------------  ----------  -----------------
+        Zn               30             Zn                  31.5        6.0              
+        Ga               31             Ga                  15.5        23.0             
+        Ge               32             Ge                  4.7         44.0             
+        As               33             As                  22.1        21.0             
+        Se               34             Se                  24.0        12.9             
+        Br               35             BrInGlass           32.0        12.0             
+        Rb               37             Rb2CO3              15.5        23.0             
+        Sr               38             SrCO3               12.1        9.0              
+        Y                39             Y_NO3_3_6H2O        28.9        22.0             
+        Zr               40             ZrO2                42.0        16.1             
+        sqlite>
+        sqlite>.exit
+        user@machine:sql_codes$</pre></p>
+
+    <p>Note that a semicolon "<typewriter>;</typewriter>" is required to terminate a SQL statement.  Alternatively, we can read a SQL script from a file.  All SQL scripts are located inside the directory <typewriter>~/BaghdadAtlas/sql_codes</typewriter>.  To run a script from this directory, e.g., <typewriter>getNG_dataVarsErr.sql</typewriter>:
+
+      <pre>
+        user@machine:sql_codes$ sqlite3 -header -column atlas_baghdad_py3.db
+        SQLite version 3.29.0 2019-07-10 17:32:03
+        Enter ".help" for usage hints.
+        sqlite> .read getNG_dataVarsErr.sql
+        load_extension('../UDF/sqlite-amalgamation/libsqlitefunctions.so')
+        ------------------------------------------------------------------
+                                                                  
+        target      residual    sample       E [keV]     dE [keV]    BR          dBR        cross section [mb]  error cs [mb]  
+        ----------  ----------  ----------  ----------  ----------  ----------  ----------  ------------------  ----------------
+        Tb          NG          N           339.2       0.4         4.6         0.6         4.99928             1.44089176609487
+        Tb          NG          N           451.3       1.0         1.5         0.6         1.6302              0.77508673475940
+        Tb          NG          N           596.4       0.6         4.2         0.8         4.56456             1.46022145388979
+        Ho          NG          N           136.0       0.3         11.0        3.0         43.2575             16.2493314305543
+        Ho          NG          N           181.3       0.2         2.9         0.3         11.40425            3.17333889261768
+        Ho          NG          N           238.4       0.2         4.5         0.5         17.69625            4.97615228715923
+        Ho          NG          N           289.0       0.0         3.9         0.7         15.33675            4.82419057245876
+        Ho          NG          N           416.8       0.4         2.4         0.3         9.438               2.70842161948615
+        Ho          NG          N           426.4       0.0         3.5         0.5         13.76375            4.06286850205615
+        Ho          NG          N           454.0       0.0         1.5         0.3         5.89875             1.9270657915598 
+        Ho          NG          N           543.6       0.2         6.2         0.4         24.3815             6.49157317848301
+        Tm          NG          N           236.4       0.3         30.0        4.0         7.722               2.27349976028149
+        Tm          NG          N           551.6       0.4         13.0        2.0         3.3462              1.01810917391015
+        Tm          NG          N           562.3       0.4         82.0        10.0        21.1068             6.10919119032954
+        Tm          NG          N           570.3       0.4         64.0        8.0         16.4736             4.78952697455605
+        Tm          NG          N           662.1       0.0         19.0        3.0         4.8906              1.49811484539737
+        Tm          NG          N           679.8       0.0         18.0        2.0         4.6332              1.32066651354534
+        Tm          NG          N           716.6       0.0         19.0        3.0         4.8906              1.49811484539737
+        Re          NG          N           149.5       0.6         8.0         3.0         2.288               1.03404363544291
+        Re          NG          N           209.4       0.8         16.0        5.0         4.576               1.83772385303124
+        Re          NG          N           214.5       0.3         24.0        4.0         6.864               2.07520508865991
+        Re          NG          N           252.0       0.3         20.0        3.0         5.72                1.67866851998839
+        Re          NG          N           274.7       0.8         11.0        3.0         3.146               1.16871622304133
+        Re          NG          N           290.3       0.3         18.0        2.0         5.148               1.41894779326091
+        Re          NG          N           316.3       0.4         10.0        2.0         2.86                0.92066552015376
+        Re          NG          N           390.1       0.4         7.2         1.0         2.0592              0.59295245542960
+        Ir          NG          N           294.6       0.0         32.0        4.0         3.75232             1.00421930035227
+        Ir          NG          N           351.4       0.08        87.0        7.0         10.20162            2.54984548198513
+        Ir          NG          N           418.2       0.2         21.0        5.0         2.46246             0.82662456072875
+        Ir          NG          N           449.4       0.2         24.0        4.0         2.81424             0.81455882537727
+	No. (n,g) lines:
+	----------------
+	30              
+	sqlite>
+      </pre>
+    </p>
+    
+    <p>
+      The above example uses information from both relational tables to calculate partial <i>&gamma;</i>-ray cross sections for all (<i>n,&gamma;</i>) lines in the database and then counts the number of (<i>n,&gamma;</i>) lines.  The <typewriter>sqlite3</typewriter> engine can also be invoked in batch mode.  Thus, we can also run the <typewriter>getNG_dataVarsErr.sql</typewriter> script directly from the command line:
+      <pre>
+	sqlite3 -header -column atlas_baghdad_py3.db &lt; getNG_dataVarsErr.sql</pre>
+    </p>
+
+    <p>
+      Shell scripts also provide batch-processing features.  A bash script <typewriter>run_sql.sh</typewriter> is provided inside the <typewriter>~/BaghdadAtlas/sql_codes</typewriter> folder that may be invoked to run the other SQL scripts in the same location.  This bash script determines the Python version running locally and the corresponding database to use.  The only variable the user needs to adjust is <typewriter>SQL_SCRIPT</typewriter> according to the desired SQL script.  By default, this variable is set to:
+      <pre>
+	<em_gold>SQL_SCRIPT</em_gold>=getCountingStats.sql</pre></p>
+
+    <h2>
+      <a name="notebook"> Using the Jupyter (IPython) Notebook </a>
+    </h2>
+
+    <p>
+      The Jupyter (IPython) Notebook provides a nice API for the SQLite libraries.  To use the notebook provided in this package <typewriter>sql_queries_atlas.ipynb</typewriter> and take advantage of the visualization methods for displaying the data a few additional Python dependencies are required: <typewriter>numpy</typewriter>; <typewriter>sqlite3</typewriter>; <typewriter>matplotlib</typewriter>; <typewriter>seaborn</typewriter>.  The notebook is located inside the <typewriter>~/BaghdadAtlas/notebook_analysis</typewriter> folder and may be launched from this location at the command line using:
+      <pre>
+	jupyter notebook sql_queries_atlas.ipynb</pre></p>
+
+    <p>
+      The notebook will then open inside a web browser and provides a Python-based interface to the SQLite libraries.  To execute a cell in a Jupyter Notebook press <typewriter>&lt;SHIFT&gt;</typewriter> + <typewriter>&lt;ENTER&gt;</typewriter> or <typewriter>&lt;CTRL&gt;</typewriter> + <typewriter>&lt;ENTER&gt;</typewriter>.  A few examples highlighting methods for interacting with and manipulating the data are given below; the syntax is a combination of Python and SQL.
+    </p>
+
+    <h3>
+      Example 1: Condition on atomic number
+    </h3>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <div id="images">
+      <img class="jupyterfig" border="5" src="jup1.png" alt="Jupyter Z" title="Jupyter: Condition on atomic number"/>
+      <figcaption>Query: Display all information from <typewriter>sample</typewriter> relational table for all entries with atomic number <typewriter>Z</typewriter> &lt; 15.</figcaption>
+    </div>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <h3>
+      Example 2: Populate list with conditional data
+    </h3>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <div id="images">
+      <img class="jupyterfig" border="5" src="jup2.png" style="height:300px;width:900px" alt="Jupyter list" title="Jupyter: Fill list with conditional data"/>
+      <figcaption>Query: Fill list with names of enriched isotopes and count number of enriched isotopes.</figcaption>
+    </div>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <h3>
+      Example 3: Write query output to file
+    </h3>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <div id="images">
+      <img class="jupyterfig" border="5" src="jup3.png" style="height:300px;width:900px" alt="Jupyter file" title="Jupyter: Write output to file"/>
+      <figcaption>Query: Print &gamma;-ray energy and intensity column data to file for nickel (<i>Z</i> = 28): <typewriter>data_Nickel.dat</typewriter>.</figcaption>
+    </div>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <h3>
+      Example 4: Plotting from a database
+    </h3>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <div id="images">
+      <img class="jupyterfig" border="5" src="jup_plotfromdb.png" alt="Jupyter plot method" title="Jupyter: Plot data" style="height:400px"/>
+      <figcaption style="padding-left:120px;padding-right:100px;text-align:left">Visualization of cross section data for natural rhenium using <typewriter>matplotlib</typewriter>, <typewriter>seaborn</typewriter>, and <typewriter>numpy</typewriter> methods.  If the cell magic <typewriter>%matplotlib inline</typewriter> is invoked, the resulting plot will also be output to the notebook, as well as generating pdf and png files according to the above method.</figcaption>
+    </div>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <div id="images">
+      <img class="jupyterfig" border="5" src="Re_cs_query.png" alt="Re plot" title="Plot of cross-section data for natural rhenium" style="height:500px;width:800px"/>
+    </div>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <p>
+      Absolute partial <i>&gamma;</i>-ray cross sections for natural rhenium (and other elements/isotopes) are determined relative to the 2<sup>+</sup><sub>1</sub> &rarr; 0<sup>+</sup><sub>gs</sub> transition in <sup>56</sup>Fe where an assumed cross section, <i>&sigma;<sub>&gamma;</sub></i> = 143 mb, is used for normalization.  See <a href="cscalc.html">here</a> for more details.  Note that a <i>&gamma;</i>-ray energy cut of 1000 keV has been imposed on the above plot.</p>
+
+    <p>
+      The notebook also provides examples of writing <i>&gamma;</i>-ray energy and <a name="re_cs">cross-section data</a> to file and generating plots with error bars, such as the one shown below for Re, for a user-defined nucleus (<typewriter>A</typewriter>, <typewriter>Z</typewriter>, <typewriter>Chem_symb</typewriter>).  This provides a convenient means for automating the data of interest and generating presentation-ready plots.
+    </p>
+
+    <div id="images">
+      <img class="jupyterfig" border="5" src="Re_cs_dcs_query.png" alt="Re plot with errors" title="Plot of cross-section data with uncertainties for natural rhenium" style="height:500px;width:800px"/>
+    </div>
+
+    <h2>
+      <a name="browser"> Using a GUI </a>
+    </h2>
+
+    <p>
+      For those who would prefer to interact with the data through a GUI, there are several options.  For example, the <a href="http://sqlitebrowser.org/"><i>DB Browser for SQLite</i></a> and <a href="https://sqlitestudio.pl/index.rvt"><i>SQLiteStudio</i></a> are both open source have cross-platform distributions.  Another option is the <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a> Add-On, <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/"><i>SQLite Manager</i></a>.  A screen shot illustrating the SQLite Manager Add-On connected to the <i>"Baghdad Atlas"</i> database <typewriter>atlas_baghdad_py3.db</typewriter> is shown below.
+
+    <div id="images">
+      <img src="atlasDB.png" width="1200px" height="600px" class="setlengths" alt="SQLiteManager GUI" title="Baghdad Atlas data visualized through SQLiteManager"/>
+      <figcaption>Visualization of the Baghdad Atlas SQL database using SQLite Manager.  The first few rows of the <typewriter>sample</typewriter> relational table are shown.</figcaption>
+    </div>
+
+    <div style="margin-bottom:0.8cm"> </div>
+
+    <div id="images">
+      <a href="http://nssc.berkeley.edu/">
+	<img class="nssc" src="NSSCLOGO8transparent.png" alt="NSSC" title="NSSC logo"/>
+      </a>
+    </div>
+
+  </body>
+</html>

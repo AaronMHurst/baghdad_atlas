@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas of Gamma-Ray Spectra from the Inelastic Scattering of Reactor Fast Neutrons: Installation procedure</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <ul id="menu">
+      <li style="display:inline;padding:5px">
+	<a href="motive.html"> Motivation
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="intro.html">
+	  <div class="dropdown">
+	    <span> Introduction </span>
+	    <div class="dropdown-content">
+	      <a href="intro.html#general">General info</a>
+	      <a href="intro.html#start">Getting started</a>
+	      <a href="intro.html#pyinst">Python installation</a>
+	      <a href="intro.html#runjup">Running Jupyter</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="install.html">
+	  <div class="dropdown">
+	    <span> Installation </span>
+	    <div class="dropdown-content">
+	      <a href="install.html#tree">Organization</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="schema.html">Schema
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="usage.html">
+	  <div class="dropdown">
+	    <span> Data access </span>
+	    <div class="dropdown-content">
+	      <a href="usage.html#commandline">Terminal</a>
+	      <a href="usage.html#notebook">Notebook</a>
+	      <a href="usage.html#browser">GUI</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="cscalc.html">Cross sections
+      </a></li>
+    </ul>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <a href="intro.html"> [PREVIOUS] </a>
+    <a href="index.html"> [HOME] </a>
+    <a href="schema.html"> [NEXT] </a>
+    <hr>
+
+    <h1> Install the package </h1>
+
+    <p>Assuming your system meets the requirements outlined in the <a href="intro.html#start">Introduction</a>, the next step is to unpack the database files and make the database.  In your <typewriter>$HOME</typewriter> directory unpack the tar ball using the following command:</p>
+      <pre>
+	tar -xvzf baghdad_atlas.tgz</pre>
+    <p>All associated subfolders and files will unpack into the master directory <typewriter>BaghdadAtlas</typewriter>.  The source codes necessary to generate the SQL database will be located in their own directory: <typewriter>$HOME/BaghdadAtlas/src</typewriter>.  The source data <typewriter>csv</typewriter> files are located in <typewriter>$HOME/BaghdadAtlas/CSV_DATA</typewriter>.  See <a href="install.html#tree">here</a> for brief details concerning the organization of the <typewriter>BaghdadAtlas</typewriter> directory tree structure.</p>
+
+    <p>
+      A <typewriter>Makefile</typewriter> is provided to build the SQL database and help with the installation process.  The <typewriter>Makefile</typewriter> will automatically detect the OS (Linux of Mac OS X only; Windows-based environments/emulators are not currently supported) and Python version running on the host machine and define the make variables accordingly.  This will hopefully negate the necessity for any manual edits to the top-level <typewriter>Makefile</typewriter>.  To compile and install the required software, invoke the command-line operations outlined below:
+      <pre>
+	cd ~/BaghdadAtlas/src   <em_red># assuming tar ball was unpacked in the home directory </em_red>
+	make                    <em_red># build the C extension-functions library</em_red>
+	make run                <em_red># build the SQLite database</em_red>
+	make install            <em_red># install library and database into specified locations</em_red></pre>
+    <p><a name="lib_def"></a>The first command compiles the <typewriter>extension-functions.c</typewriter> code into a dynamic shared-object library providing enhanced mathematical functionality (trigonometric functions, square root, power, logarithmic methods etc.) not readily available with standard SQLite3 engines.  The next <typewriter>make run</typewriter> command is issued to <typewriter>run</typewriter> the appropriate Python scripts to define the OS-dependent library in the SQL scripts provided in <typewriter>~/BaghdadAtlas/sql_codes</typewriter>, and create the Python-version-dependent SQL database.  This stage may take a few minutes to compile the data depending on your OS.  Finally, the <typewriter>make install</typewriter> instruction installs:
+      <ol type="i">
+	<li> The new C library (Linux: <typewriter>libsqlitefunctions.so</typewriter>, Mac OS X: <typewriter>libsqlitefunctions.dylib</typewriter>) into the <typewriter>~/BaghdadAtlas/UDF/sqlite-amalgamation</typewriter> directory.  This is the specified location for extension functions to be loaded into SQL scripts.  <b>Make sure the path and library are correctly <a href="cscalc.html#load_ext">defined</a> for your OS in all SQL scripts inside the </b><typewriter>~/BaghdadAtlas/sql_codes</typewriter> <b>folder that use the </b><typewriter>load_extension()</typewriter> <b>method.</b></li> 
+	<li> The SQL database (Python 2: <typewriter>atlas_baghdad_py2.db</typewriter>, Python 3: <typewriter>atlas_baghdad_py3.db</typewriter>) into the <typewriter>~/BaghdadAtlas/notebook_analysis</typewriter> and <typewriter>~/BaghdadAtlas/sql_codes</typewriter> directories.  The IPython Notebook and SQL scripts are ran from within these locations.</li></ol></p>
+
+    <p>For MAC OS X users, additional flags may need to be defined during the <typewriter>make</typewriter> process.  If the compilation fails, and SQLite3 was installed through MacPorts, define (i.e. enable/uncomment):</p>
+      <pre>
+	MACPORTS = /opt/local
+	CPPFLAGS = -I$(MACPORTS)/include
+	LDFLAGS = -L$(MACPORTS)/lib -lsqlite3</pre>
+    <p>Or, if SQLite was installed using Fink, define:</p>
+      <pre>
+	FINK = /sw
+	CPPFLAGS = -I$(FINK)/include
+	LDFLAGS = -L$(FINK)/lib -lsqlite3</pre>
+    <p>Now try to recompile using the following rule to make the target:
+      <pre>
+	$(CC) $(CFLAGS) $(CCFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@ $(LDFLAGS)</pre>
+    </p>
+
+    <p>Clean-up operations can be performed to remove C, Python, and SQLite artifacts in addition to objects created with the Jupyter Notebook.  For more information execute the command <typewriter>make help</typewriter>: <pre>
+   default
+       Compile shared-object library to enhance SQLite functionality.
+   run
+       Run script on local machine to create SQLite ATLAS.
+   install
+       Install shared-object library to location:
+                       <em_green>BaghdadAtlas/UDF/sqlite-amalgamation</em_green>
+       Install SQLite database to the following two locations:
+                       <em_green>BaghdadAtlas/sql_codes</em_green>
+                       <em_green>BaghdadAtlas/notebook_analysis</em_green>
+   clean
+       Remove C artifacts.
+   clean-pyc
+       Remove Python artifacts.
+   clean-sql
+       Remove SQLite artifacts.
+   clean-nb
+       Remove artifacts and objects created with Jupyter Notebook.
+   clean-all
+       Remove all C, Python, SQLite artifacts and Jupyter Notebook objects.</pre>
+    </p>
+
+    <h2>
+      <a name="tree"> Organization </a>
+    </h2>
+
+    <p>After unpacking and installation, your filesystem should have the following structure:</p>
+    <ul>
+      <li> <typewriter>~/BaghdadAtlas/book/</typewriter> &Rightarrow; Contains a pdf of the ATLAS and a summary document.</li>
+      <li> <typewriter>~/BaghdadAtlas/CSV_DATA/</typewriter> &Rightarrow; Contains the source <typewriter>csv</typewriter> data files used to compile the database.</li>
+      <li> <typewriter>~/BaghdadAtlas/document/</typewriter> &Rightarrow; Contains the <typewriter>html</typewriter> manual.</li>
+      <li> <typewriter>~/BaghdadAtlas/notebook_analysis/</typewriter> &Rightarrow; Contains a Jupyter Notebook illustrating various methods for interacting with the data; after compilation the SQL database (Python 2: <typewriter>atlas_baghdad_py2.db</typewriter>, Python 3: <typewriter>atlas_baghdad_py3.db</typewriter>) is also installed into this location.  A few brief comments are given in cells explaining database queries.</li>
+      <li> <typewriter>~/BaghdadAtlas/sql_codes/</typewriter> &Rightarrow; Contains several SQL scripts illustrating methods for interacting with the data; after compilation the SQL database is also installed into this location.  A few brief comments are given above the transaction in each of the example SQL scripts explaining the query.</li>
+      <li> <typewriter>~/BaghdadAtlas/src/</typewriter> &Rightarrow; Contains the source code used to create the database and extension modules.</li>
+      <li> <typewriter>~/BaghdadAtlas/UDF/</typewriter> &Rightarrow; Directory created after compilation of the sqlite extension-functions library; contains the subfolder <typewriter>sqlite-amalgamation</typewriter> into which the sqlite extension-functions library (Linux: <typewriter>libsqlitefunctions.so</typewriter>, Mac OS X: <typewriter>libsqlitefunctions.dylib</typewriter>) is installed.</li>
+    </ul>
+
+    <div id="images">
+      <a href="http://nssc.berkeley.edu/">
+	<img class="nssc" src="NSSCLOGO8transparent.png" alt="NSSC" title="NSSC logo"/>
+      </a>
+    </div>
+
+  </body>
+</html>

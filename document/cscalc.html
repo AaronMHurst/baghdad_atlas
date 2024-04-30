@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas of Gamma-Ray Spectra from the Inelastic Scattering of Reactor Fast Neutrons: Cross sections</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <ul id="menu">
+      <li style="display:inline;padding:5px">
+	<a href="motive.html"> Motivation
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="intro.html">
+	  <div class="dropdown">
+	    <span> Introduction </span>
+	    <div class="dropdown-content">
+	      <a href="intro.html#general">General info</a>
+	      <a href="intro.html#start">Getting started</a>
+	      <a href="intro.html#pyinst">Python installation</a>
+	      <a href="intro.html#runjup">Running Jupyter</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="install.html">
+	  <div class="dropdown">
+	    <span> Installation </span>
+	    <div class="dropdown-content">
+	      <a href="install.html#tree">Organization</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="schema.html">Schema
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="usage.html">
+	  <div class="dropdown">
+	    <span> Data access </span>
+	    <div class="dropdown-content">
+	      <a href="usage.html#commandline">Terminal</a>
+	      <a href="usage.html#notebook">Notebook</a>
+	      <a href="usage.html#browser">GUI</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="cscalc.html">Cross sections
+      </a></li>
+    </ul>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <a href="usage.html"> [PREVIOUS] </a>
+    <a href="index.html"> [HOME] </a>
+    <hr>
+
+    <h1><a name="cs"> Cross-section calculations </a></h1>
+
+    <p>The normalization <i>&gamma;</i> ray in the (<i>n,n&apos;&gamma;</i>) ATLAS is the 847-keV 2<sup>+</sup><sub>1</sub> &rightarrow; 0<sup>+</sup><sub>gs</sub> transition in <sup>56</sup>Fe which has a relative intensity (RI) of 100 units.  In the example below, we adopt a partial <i>&gamma;</i>-ray production cross section (<i>&sigma;<sub>&gamma;</sub></i>) of 143 &#177 29 mb for this transition.  To extract cross sections relative to this measurement we add the following code to our SQL transactions:</p>
+
+    <pre>
+      <strong><em_pb>CREATE</em_pb></strong> TEMP <strong><em_pb>TABLE</em_pb> <em_black>_Variables</em_black></strong>(
+          <em_pb>Name</em_pb> TEXT <em_pb>PRIMARY KEY</em_pb>,
+          FeCS <em_green>FLOAT</em_green>,
+          FeRatio <em_green>FLOAT</em_green>,
+          d_FeCS <em_green>FLOAT</em_green>,
+          d_FeRatio <em_green>FLOAT</em_green>,	  
+          RI <em_green>FLOAT</em_green>
+      );
+
+      <em_purple>INSERT OR REPLACE INTO</em_purple> _Variables <em_purple>VALUES</em_purple> (<em_pink>'Constant'</em_pink>, 143, 1.43, 29, 0.29, 100.0);</pre>
+
+    
+    <p>Here, <typewriter>FeCS=143</typewriter> is <i>&sigma;<sub>&gamma;</sub></i> for the <sup>56</sup>Fe transition, <typewriter>d_FeCS=29</typewriter> is its associated uncertainty, <typewriter>RI=100.0</typewriter> is the relative intensity of the <sup>56</sup>Fe transition, <typewriter>FeRatio=1.43</typewriter> is the ratio <i>&sigma;<sub>&gamma;</sub></i>(<sup>56</sup>Fe)/RI(<sup>56</sup>Fe), and <typewriter>d_FeRatio=0.29</typewriter> is the uncertainty ratio.  These variables can be adjusted to accommodate user-specified values.  Several SQL scripts utilizing the above <i>"global variables"</i> temporary table are provided in the examples directory <typewriter>~/BaghdadAtlas/sql_codes</typewriter>, e.g., <typewriter>getDyCs_Vars.sql</typewriter> which calculates partial cross sections and associated uncertainties for transitions in natural dysprosium.  A similar script that does not use the temporary-table method above is also provided for comparison, <typewriter>getFeCS.sql</typewriter> which calculates partial cross sections and associated uncertainties for transitions in natural iron.  Note that the <a name="load_ext"><b>extension library</b></a> (Linux: <typewriter>libsqlitefunctions.so</typewriter>, Mac OS X: <typewriter>libsqlitefunctions.dylib</typewriter>) must be loaded into these transactions because nonstandard-sqlite3 functionality is being used.  The appropriate library gets defined automatically during <a href="install.html#lib_def">installation</a>.  The SQL scripts impacted during the installation process will therefore contain the following OS-dependent transactions:
+
+      <pre>
+	<strong><em_pb>SELECT</em_pb></strong> load_extension(<em_green>'../UDF/sqlite-amalgamation/libsqlitefunctions.so'</em_green>); <em_red>/* Linux library */</em_red>
+	<strong><em_pb>SELECT</em_pb></strong> load_extension(<em_green>'../UDF/sqlite-amalgamation/libsqlitefunctions.dylib'</em_green>); <em_red>/* Mac OS X library */</em_red></pre></p>
+
+    <p>Alternatively, cross-section calculations may also be performed using the Jupyter Notebook.  To illustrate this, a <typewriter>CrossSection</typewriter> class has been defined in one of the cells in the example notebook <typewriter>sql_queries_atlas.ipynb</typewriter> provided in <typewriter>~/BaghdadAtlas/notebook_analysis</typewriter>.  The class constants <typewriter>FeCS</typewriter>, <typewriter>FeRatio</typewriter>, and <typewriter>RI</typewriter> are defined as above.  The cross sections for <sup>nat</sup>Re(<i>n,n&apos;&gamma;</i>), for example, are shown <a href="usage.html#re_cs">here</a>.  To calculate cross sections for a different nucleus change the atomic number (<typewriter>Z</typewriter>), chemical symbol (<typewriter>Chem_symb</typewriter>), and atomic mass (<typewriter>A</typewriter>) to that of the nucleus of interest in the corresponding cell.
+
+    <div id="images">
+      <a href="http://nssc.berkeley.edu/">
+	<img class="nssc" src="NSSCLOGO8transparent.png" alt="NSSC" title="NSSC logo"/>
+      </a>
+    </div>
+
+  </body>
+</html>

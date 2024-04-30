@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas of Gamma-Ray Spectra from the Inelastic Scattering of Reactor Fast Neutrons: SQL schema</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <ul id="menu">
+      <li style="display:inline;padding:5px">
+	<a href="motive.html"> Motivation
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="intro.html">
+	  <div class="dropdown">
+	    <span> Introduction </span>
+	    <div class="dropdown-content">
+	      <a href="intro.html#general">General info</a>
+	      <a href="intro.html#start">Getting started</a>
+	      <a href="intro.html#pyinst">Python installation</a>
+	      <a href="intro.html#runjup">Running Jupyter</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="install.html">
+	  <div class="dropdown">
+	    <span> Installation </span>
+	    <div class="dropdown-content">
+	      <a href="install.html#tree">Organization</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="schema.html">Schema
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="usage.html">
+	  <div class="dropdown">
+	    <span> Data access </span>
+	    <div class="dropdown-content">
+	      <a href="usage.html#commandline">Terminal</a>
+	      <a href="usage.html#notebook">Notebook</a>
+	      <a href="usage.html#browser">GUI</a>
+	    </div>
+	  </div>
+      </a></li>
+      <li style="display:inline;padding:5px">
+	<a href="cscalc.html">Cross sections
+      </a></li>
+    </ul>
+
+    <div style="margin-bottom:0.5cm"> </div>
+
+    <a href="install.html"> [PREVIOUS] </a>
+    <a href="index.html"> [HOME] </a>
+    <a href="usage.html"> [NEXT] </a>
+    <hr>
+
+    <h1><a name="sql_schema"> SQL schema (data structure) </a></h1>
+
+    <p>The data structure for the (<i>n,n&apos;&gamma;</i>) data [<a href="motive.html#ftn.id:ATLAS">1</a>] is described using two relational tables, <typewriter>nucleus</typewriter> and <typewriter>sample</typewriter>.  The <typewriter>nucleus</typewriter> table contains the nuclear-structure type information related to the (<i>n,n&apos;&gamma;</i>) reaction product of the irradiated sample, whereas the <typewriter>sample</typewriter> table contains the meta data associated with the irradiated sample.  The schema has the following format:
+      <pre>
+	<strong><em_pb>CREATE TABLE</em_pb> <em_black>nucleus</em_black></strong> (
+	    <strong><em_black>id</em_black> <em_pb>INTEGER PRIMARY KEY</em_pb></strong>,
+	    nuc_symb <em_green>CHAR(5)</em_green>,         <em_red>/* Chemical symbol (with mass number for enriched isotopes) of the irradiated sample */</em_red>
+            nuc_Z <em_green>INTEGER</em_green>,            <em_red>/* Atomic number of irradiated sample */</em_red>
+	    energy_gamma <em_green>FLOAT</em_green>,       <em_red>/* Gamma-ray transition energy [keV] */</em_red>
+            d_energy_gamma <em_green>FLOAT</em_green>,     <em_red>/* Uncertainty: Gamma-ray transition energy [keV] */</em_red>
+	    intensity_gamma <em_green>FLOAT</em_green>,    <em_red>/* Gamma-ray transition intensity [RI] */</em_red>
+	    d_intensity_gamma <em_green>FLOAT</em_green>,  <em_red>/* Uncertainty: Gamma-ray transition intensity [RI] */</em_red>
+	    transition_type <em_green>CHAR(2)</em_green>,  <em_red>/* Gamma flag: f (firm); d (doublet); t (tentative); c (calibration); m (multiply placed) */</em_red>
+	    residual <em_green>CHAR(16)</em_green>,        <em_red>/* Residual-nucleus reaction product; usually the (n,n&apos;) compound */</em_red>
+	    residual_type <em_green>CHAR(2)</em_green>,    <em_red>/* Residual-nucleus identification flag: f (firm); t (tentative) */</em_red>
+	    energy_ex <em_green>FLOAT</em_green>,          <em_red>/* Excitation energy in compound nucleus [keV] */</em_red>
+	    ex_type <em_green>CHAR(2)</em_green>,          <em_red>/* Excitation-energy flag: f (firm); t (tentative); u (unknown) */</em_red>
+	    sample <em_green>CHAR(1)</em_green>            <em_red>/* Sample flag: E (isotopically enriched); N (natural elemental abundance) */</em_red>
+	);
+
+	<strong><em_pb>CREATE TABLE</em_pb> <em_black>sample</em_black></strong> (
+	    <strong><em_black>id</em_black> <em_pb>INTEGER PRIMARY KEY</em_pb></strong>,
+	    flag <em_green>CHAR(1)</em_green>,             <em_red>/* Meta-data identification flag: X */</em_red>
+	    element <em_green>TEXT</em_green>,             <em_red>/* Name of element/enriched isotope */</em_red>
+	    Z <em_green>INTEGER</em_green>,                <em_red>/* Atomic number of element/enriched isotope */</em_red>
+	    symbol <em_green>TEXT</em_green>,              <em_red>/* Chemical symbol for element/enriched isotope */</em_red>
+	    N <em_green>FLOAT</em_green>,                  <em_red>/* Normalization factor for determination of absolute partial gamma-ray cross sections */</em_red>
+	    dN <em_green>FLOAT</em_green>,                 <em_red>/* Uncertainty: Cross-section normalization factor */</em_red>
+	    e_gamma_norm <em_green>FLOAT</em_green>,       <em_red>/* Gamma-ray transition energy used for normalization [keV] */</em_red>
+	    A <em_green>INTEGER</em_green>,                <em_red>/* Atomic mass of enriched isotope (A=0 for natural elemental samples) */</em_red>
+	    mass <em_green>FLOAT</em_green>,               <em_red>/* Mass [g] of irradiated sample */</em_red>
+	    exposure_time <em_green>FLOAT</em_green>,      <em_red>/* Measurement period [h] of irradiated sample */</em_red>
+	    enrichment <em_green>FLOAT</em_green>,         <em_red>/* Enrichment factor [%] of principal isotope in sample (0 for natural elemental samples) */</em_red>
+	    sample_composition <em_green>TEXT</em_green>,  <em_red>/* Chemical composition of irradiated sample */</em_red>
+	    isotope_norm <em_green>TEXT</em_green>         <em_red>/* Isotope used for gamma-ray intensity normalization */</em_red>
+	);</pre>
+
+    </p>
+
+    <p>
+      <strong><u>Notes:</u></strong></br>
+      <ol type="i" style="font-weight:bold">
+	<li> <div style="font-weight:normal"><typewriter>nucleus.intensity_gamma</typewriter> is the relative <i>&gamma;</i>-ray intensity measured at <i>&theta;</i>=90&deg; to the neutron beam.  In each data set, one of the <i>&gamma;</i>-ray lines is assumed to be 100%.  These relative intensities may be converted to absolute partial <i>&gamma;</i>-ray production cross sections (<i>&sigma;<sub>&gamma;</sub></i>) using the corresponding <typewriter>sample.N</typewriter> information.</div></li>
+	<li> <div style="font-weight:normal"><typewriter>sample.N</typewriter> is a normalization factor representing the intensity of the corresponding <typewriter>sample.e_gamma_norm</typewriter> transition relative to the 2<sup>+</sup><sub>1</sub> &rightarrow; 0<sup>+</sup><sub>gs</sub> <i>&gamma;</i>-ray transition in <sup>56</sup>Fe; <typewriter>sample.N = 100</typewriter> and <typewriter>sample.e_gamma_norm = 847</typewriter> keV for <sup>56</sup>Fe.</div></li>
+	<li> <div style="font-weight:normal"><typewriter>nucleus.transition_type = 'c'</typewriter> and <typewriter>nucleus.transition_type = 'm'</typewriter> refer to calibration and multiply-placed <i>&gamma;</i> rays, respectively, as explained in [<a href="motive.html#ftn.id:ATLAS">1</a>].</div></li>
+	<li> <div style="font-weight:normal">Though less frequent, the <typewriter>nucleus.transition_type</typewriter> variable may hold more than one flag, e.g., <typewriter>nucleus.transition_type = 'mt'</typewriter> indicates a multiply-placed <i>&gamma;</i>-ray transition that is also a tentative assignment.</div></li>
+	<li> <div style="font-weight:normal"><typewriter>nucleus.residual</typewriter> also includes radiative capture (<i>n,&gamma;</i>) lines (identified as <typewriter>nucleus.residual = 'NG'</typewriter>) as well as contaminant and background lines (identified by the corresponding nucleus).  <em_red><i>Earlier versions of the database previously defined the <b>residual</b> and <b>residual_type</b> member variables as <b>compound</b> and <b>compound_type</b>, respectively.</em_red></div></li>
+	<li> <div style="font-weight:normal"><typewriter>nucleus.energy_ex</typewriter> is generally a float-type variable [keV] where its corresponding <typewriter>nucleus.ex_type</typewriter> flag is <typewriter>'f'</typewriter> (firm) or <typewriter>'t'</typewriter> (tentative).  However for unknown cases, i.e., <typewriter>nucleus.ex_type = 'u'</typewriter>, then <typewriter>nucleus.energy_ex = '?'</typewriter>.
+      </ol>
+    </p>
+
+    <div id="images">
+      <a href="http://nssc.berkeley.edu/">
+	<img class="nssc" src="NSSCLOGO8transparent.png" alt="NSSC" title="NSSC logo"/>
+      </a>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,267 @@
+body {
+    font-family: Verdana,sans-serif;
+    background-color:#e6f2ff;
+    margin-top:5px;
+    margin-right:5px;
+    margin-left:5px;
+    margin-bottom:5pt;
+}
+
+.cover {
+    display:inline-block;
+    margin-left:auto;
+    margin-right:auto;
+    height:300px;
+    width:475px;
+}
+
+.flowfig {
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+    height:300px;
+    width:550px;
+}
+
+.jupyterfig {
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+    width:1100px;
+    /*height:600px;*/
+    height:auto;
+}
+
+.setlengths {
+    max-width:1000px;
+    max-height:700px;
+}
+
+#images {
+    text-align:center;
+}
+
+.nssc {
+    width: 20%;
+    height: auto;
+    margin: 0 0 0 1050px;
+}
+
+figcaption {
+    display:inline-block;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+typewriter {
+    font-family:'Lucida Console',monospace;
+    font-size:12pt;
+    font-weight:bold;
+    color:magenta;
+}
+
+em_red {
+    color: red;
+}
+
+em_black {
+    color: black;
+}
+
+em_green {
+    color: green;
+}
+
+em_pb {
+    color: powderblue;
+}
+
+em_gold {
+    color: gold;
+}
+
+em_black {
+    color: black;
+}
+
+em_pink {
+    color: pink;
+}
+
+em_purple {
+    color: purple;
+}
+
+h1 {
+    color:white;
+    margin:10px 20px 0px 20px;
+    border-style:solid;
+    border-width:2px;
+    border-color:black;
+    padding-left:20px;
+    padding-top:5px;
+    padding-bottom:5px;
+    background-color:#4d4d4d;
+    font-family:sans-serif;
+    font-weight:bold;
+    font-size:20pt;
+    text-align:center;
+    box-shadow: 10px 10px 5px #888888;
+    border-radius:10px
+}
+
+h2 {
+    color:black;
+    margin:20px 20px 0px 20px;
+    border-style:solid;
+    border-width:2px;
+    border-color:#000000;
+    padding-left:10px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-color:#e7b1e7;
+    font-family:sans-serif;
+    font-size:14pt;
+    box-shadow: 10px 10px 5px #888888;
+    border-radius:10px;
+}
+            
+h3 {
+    color:black;
+    margin:3pt 15pt;
+    font-family:sans-serif;
+    font-size:12pt;
+}
+
+li {
+    margin:12pt 0pt 0pt 0pt;
+}
+            
+ul.level1 {
+    color:#000000;
+    margin-left:30px;
+    margin-top:10px;
+    margin-right:10px;
+    margin-bottom:20px;
+    list-style-position:inside;
+    padding-left:0px;
+    font-weight:bold;
+    font-size:14pt;
+}
+
+p {
+    font-size:12pt;
+    margin-left:20px;
+    margin-top:20px;
+    margin-right:30px;
+    margin-bottom:20px;
+    padding-left:0px;
+    text-indent: 0pt;
+    color:#000000;
+    line-height: 120%;
+    text-align:left;
+}
+
+pre {
+    font-size:12pt;
+    background-color:white;
+    border-style:solid;
+    border-width:1px;
+    border-color:#555555;
+    margin-left:20px;
+    margin-top:30px;
+    margin-right:20px;
+    margin-bottom:30px;
+    padding-left:0px;
+    padding-top:5px;
+    padding-bottom:5px;
+    text-indent: 0pt;
+    color:navy;
+    line-height: 100%;
+    text-align:left;
+    box-shadow: 10px 10px 5px #888888;
+    border-radius:10px;
+}
+
+#menu {
+    position:fixed;
+    right:0;
+    top:0%;
+    width:45em;
+    margin-top:-0.2em;
+    z-index: 5;
+    background: hsla(80, 90%, 40%, 0.7);
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    text-align: left;
+    border: solid hsla(80, 90%, 40%, 0.5);
+    border-right: none;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    box-shadow: 0 1px 3px black;
+    border-radius: 10px;
+}
+
+#menu a:hover {
+    background-color: hsla(80, 150%, 45%, 0.7);
+    text-decoration: none;
+}
+
+a:link {
+    text-decoration:none;
+    background-color:transparent;
+    color:navy;
+}
+
+a:visited {
+    text-decoration:none;
+    background-color:transparent;
+    color:navy;
+}
+
+a:active {
+    text-decoration:none;
+    color:#0000ff
+}
+
+a:hover {
+    text-decoration:underline;
+    background-color: transparent;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: hsla(80, 90%, 40%, 0.7);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.dropdown-content a {
+    color: navy;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 10pt;
+}
+
+.dropdown-content a:hover {
+    background-color: hsla(80, 150%, 40%, 0.7);
+    border-radius: 10px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
