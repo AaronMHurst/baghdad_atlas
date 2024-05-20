@@ -14,7 +14,7 @@ This project is described in detail in the reference article *The Baghdad Atlas:
 A relational database of inelastic neutron-scattering (n,n'&gamma;) data* by
 A.M. Hurst *et al.* [[2]](#2).  Absolute cross sections for all transitions in
 the *Baghdad Atlas* can be derived relative to the flux-weighted cross section
-deduced for the 2<sup>+</sup> $\rightarrow$ 0<sub>gs</sub><sup>+</sup>
+deduced for the 2<sup>+</sup> $\rightarrow$ 0<sup>+</sup><sub>gs</sub>
 transition in <sup>56</sup>Fe [[2]](#2); the normalization transition of the
 Atlas.  The characterized flux used in this determination is shown in comparison
 to the measured flux at the IRT-M Baghdad Research Reactor in the figure below.
