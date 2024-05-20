@@ -6,7 +6,9 @@ set of CSV-style files and `Python` scripts are provided to build a
 corresponding `SQLite` relational database.  A data-retrieval example for the
 Fe data is shown in comparison to measured spectrum in the figure below.
 
-
+Measured Fe spectrum | Database-retrieved Fe data
+:-------------------:|:--------------------:
+![Measured](Fe_spectrum.png?raw=true "Fe spectrum measured at the Baghdad Research Reactor.") | ![Queried](Fe_cs_query.png?raw=true "Fe data retrieved using a SQL database query.")
 
 This project is described in detail in the reference article *The Baghdad Atlas:
 A relational database of inelastic neutron-scattering (n,n'&gamma;) data* by
